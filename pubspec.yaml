@@ -1,0 +1,43 @@
+name: in_out_ware_app
+description: "InOutWareApp"
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+  flutter: ">=3.27.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  componentes_lr:
+    path: ../../Flutter_X_Components_Flutter
+
+  sale_module:
+    path: ../packages/sale_module
+
+  stock_module:
+    path: ../packages/stock_module
+
+  transfer_module:
+    path: ../packages/transfer_module
+
+  cupertino_icons: ^1.0.8
+  get: ^4.6.6
+  responsive_framework: ^0.2.0
+  window_size: 0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+dependency_overrides:
+  intl: 0.20.2
+
+flutter:
+  uses-material-design: true
