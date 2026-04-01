@@ -4,6 +4,7 @@ import 'package:componentes_lr/componentes_lr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:in_out_layout/in_out_layout.dart';
 import 'package:in_out_ware_app/config/app_routes.dart';
 import 'package:in_out_ware_app/core/infra/init.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -24,10 +25,11 @@ Future<void> main() async {
     setWindowTitle('InOutWareApp');
     setWindowMaxSize(Size.infinite);
     getCurrentScreen().then((screen) {
+      final desktop = isDesktopFormFactor;
       setWindowFrame(Rect.fromCenter(
         center: screen!.frame.center,
-        width: 375,
-        height: 812,
+        width: desktop ? 1280 : 900,
+        height: desktop ? 800 : 700,
       ));
     });
   }
@@ -63,8 +65,12 @@ class MyApp extends StatelessWidget {
       ),
       builder: (context, widget) {
         AppMeasurements.setAppMeasurements(context);
+        final child = ClampingScrollWrapper.builder(context, widget!);
+        if (isDesktopFormFactor) {
+          return child;
+        }
         return ResponsiveWrapper.builder(
-          ClampingScrollWrapper.builder(context, widget!),
+          child,
           minWidth: 375,
           breakpoints: [
             const ResponsiveBreakpoint.autoScale(375, name: MOBILE),

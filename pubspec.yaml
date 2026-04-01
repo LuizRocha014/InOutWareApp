@@ -26,6 +26,9 @@ dependencies:
   transfer_module:
     path: ../packages/transfer_module
 
+  in_out_layout:
+    path: ../packages/in_out_layout
+
   cupertino_icons: ^1.0.8
   get: ^4.6.6
   responsive_framework: ^0.2.0
