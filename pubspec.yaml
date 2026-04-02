@@ -15,23 +15,23 @@ dependencies:
     sdk: flutter
 
   componentes_lr:
-    path: ../../Flutter_X_Components_Flutter
+    path: C:\Repository\Flutter_X_Components_Flutter
 
   sale_module:
-    path: ../packages/sale_module
+    path: C:\Repository\sale_module
 
   stock_module:
-    path: ../packages/stock_module
+    path: C:\Repository\stock_module
 
   transfer_module:
-    path: ../packages/transfer_module
-
-  in_out_layout:
-    path: ../packages/in_out_layout
+    path: C:\Repository\transfer_module
 
   cupertino_icons: ^1.0.8
   get: ^4.6.6
+  http: ^1.2.2
+  package_info_plus: ^8.1.2
   responsive_framework: ^0.2.0
+  shared_preferences: ^2.3.3
   window_size: 0.1.0
 
 dev_dependencies:

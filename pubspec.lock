@@ -116,8 +116,8 @@ packages:
   componentes_lr:
     dependency: "direct main"
     description:
-      path: "../../Flutter_X_Components_Flutter"
-      relative: true
+      path: "C:\\Repository\\Flutter_X_Components_Flutter"
+      relative: false
     source: path
     version: "0.0.1"
   cross_file:
@@ -381,7 +381,7 @@ packages:
     source: hosted
     version: "1.0.2"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -565,7 +565,7 @@ packages:
     source: hosted
     version: "9.3.0"
   package_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info_plus
       sha256: "16eee997588c60225bda0488b6dcfac69280a6b7a3cf02c741895dd370a02968"
@@ -743,8 +743,8 @@ packages:
   sale_module:
     dependency: "direct main"
     description:
-      path: "../packages/sale_module"
-      relative: true
+      path: "C:\\Repository\\sale_module"
+      relative: false
     source: path
     version: "0.0.1"
   searchfield:
@@ -772,7 +772,7 @@ packages:
     source: hosted
     version: "3.4.0"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       sha256: c3025c5534b01739267eb7d76959bbc25a6d10f6988e1c2a3036940133dd10bf
@@ -867,8 +867,8 @@ packages:
   stock_module:
     dependency: "direct main"
     description:
-      path: "../packages/stock_module"
-      relative: true
+      path: "C:\\Repository\\stock_module"
+      relative: false
     source: path
     version: "0.0.1"
   stream_channel:
@@ -922,8 +922,8 @@ packages:
   transfer_module:
     dependency: "direct main"
     description:
-      path: "../packages/transfer_module"
-      relative: true
+      path: "C:\\Repository\\transfer_module"
+      relative: false
     source: path
     version: "0.0.1"
   typed_data:

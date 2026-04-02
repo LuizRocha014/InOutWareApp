@@ -4,8 +4,8 @@ import 'package:componentes_lr/componentes_lr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:in_out_layout/in_out_layout.dart';
 import 'package:in_out_ware_app/config/app_routes.dart';
+import 'package:in_out_ware_app/core/auth/app_auth.dart';
 import 'package:in_out_ware_app/core/infra/init.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:window_size/window_size.dart';
@@ -21,6 +21,8 @@ Future<void> main() async {
   initStockAppInstances();
   initTransferAppInstances();
 
+  await AppAuth.I.initialize();
+
   if (Platform.isWindows) {
     setWindowTitle('InOutWareApp');
     setWindowMaxSize(Size.infinite);
@@ -34,11 +36,13 @@ Future<void> main() async {
     });
   }
 
-  runApp(const MyApp());
+  runApp(MyApp(initialRoute: AppAuth.I.initialRoute));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.initialRoute});
+
+  final String initialRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      initialRoute: '/',
+      initialRoute: initialRoute,
       getPages: AppRoutes.routes,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0E2238)),

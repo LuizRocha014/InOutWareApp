@@ -1,7 +1,7 @@
 import 'package:componentes_lr/componentes_lr.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:in_out_layout/in_out_layout.dart';
+import 'package:in_out_ware_app/core/auth/app_auth.dart';
 import 'package:in_out_ware_app/presentation/controllers/home_controller.dart';
 import 'package:in_out_ware_app/presentation/widgets/module_item_widget.dart';
 
@@ -38,6 +38,16 @@ class _MobileHome extends StatelessWidget {
         title: const Text('InOutWareApp'),
         backgroundColor: scheme.primaryContainer,
         foregroundColor: scheme.onPrimaryContainer,
+        actions: [
+          IconButton(
+            tooltip: 'Sair',
+            onPressed: () async {
+              await AppAuth.I.clearSessionToken();
+              Get.offAllNamed('/login');
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -108,6 +118,15 @@ class _DesktopHome extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        tooltip: 'Sair',
+                        onPressed: () async {
+                          await AppAuth.I.clearSessionToken();
+                          Get.offAllNamed('/login');
+                        },
+                        icon: const Icon(Icons.logout),
                       ),
                     ],
                   ),
