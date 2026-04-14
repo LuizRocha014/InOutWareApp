@@ -1,19 +1,26 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:in_out_ware_app/core/session/auth_user_snapshot.dart';
 
 class AuthLoginResult {
-  AuthLoginResult.ok(this.accessToken)
-      : isSuccess = true,
-        errorMessage = null;
+  AuthLoginResult._({
+    required this.isSuccess,
+    this.accessToken,
+    this.errorMessage,
+    this.user,
+  });
 
-  AuthLoginResult.fail(this.errorMessage)
-      : isSuccess = false,
-        accessToken = null;
+  factory AuthLoginResult.ok(String accessToken, AuthUserSnapshot? user) =>
+      AuthLoginResult._(isSuccess: true, accessToken: accessToken, user: user);
+
+  factory AuthLoginResult.fail(String errorMessage) =>
+      AuthLoginResult._(isSuccess: false, errorMessage: errorMessage);
 
   final bool isSuccess;
   final String? accessToken;
   final String? errorMessage;
+  final AuthUserSnapshot? user;
 }
 
 /// POST {base}/api/auth/login — DocumentaçãoAPI.
@@ -51,7 +58,14 @@ class AuthLoginService {
         if (token == null || token.isEmpty) {
           return AuthLoginResult.fail('Token não encontrado na resposta.');
         }
-        return AuthLoginResult.ok(token);
+        AuthUserSnapshot? user;
+        try {
+          user = AuthUserSnapshot.fromLoginJson(map);
+        } catch (_) {
+          user = null;
+        }
+        if (user != null && !user.hasIdentity) user = null;
+        return AuthLoginResult.ok(token, user);
       }
 
       if (response.statusCode == 401 || response.statusCode == 400) {

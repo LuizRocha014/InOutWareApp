@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_out_ware_app/core/auth/app_auth.dart';
 import 'package:in_out_ware_app/presentation/controllers/home_controller.dart';
+import 'package:in_out_ware_app/presentation/widgets/branch_selection_dialog.dart';
 import 'package:in_out_ware_app/presentation/widgets/module_item_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,18 +17,41 @@ class _HomePageState extends State<HomePage> {
   late final HomeController controller = Get.put(HomeController(), permanent: true);
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _openBranchPickerIfNeeded();
+    });
+  }
+
+  Future<void> _openBranchPickerIfNeeded() async {
+    if (!mounted) return;
+    final args = Get.arguments;
+    final fromLogin = args is Map && args['requireBranchPicker'] == true;
+    final missing =
+        AppAuth.I.selectedBranchId == null || AppAuth.I.selectedBranchId!.isEmpty;
+    if (!fromLogin && !missing) return;
+    await showBranchSelectionDialog(
+      context,
+      preselectedBranchId: AppAuth.I.selectedBranchId,
+    );
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (isDesktopFormFactor) {
-      return _DesktopHome(controller: controller);
+      return _DesktopHome(controller: controller, branchName: AppAuth.I.selectedBranchName);
     }
-    return _MobileHome(controller: controller);
+    return _MobileHome(controller: controller, branchName: AppAuth.I.selectedBranchName);
   }
 }
 
 class _MobileHome extends StatelessWidget {
-  const _MobileHome({required this.controller});
+  const _MobileHome({required this.controller, this.branchName});
 
   final HomeController controller;
+  final String? branchName;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +84,16 @@ class _MobileHome extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
+            if (branchName != null && branchName!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                'Filial: $branchName',
+                style: TextStyle(
+                  color: scheme.onSurfaceVariant,
+                  fontSize: 14,
+                ),
+              ),
+            ],
             const SizedBox(height: 16),
             Expanded(
               child: Obx(() {
@@ -88,9 +122,10 @@ class _MobileHome extends StatelessWidget {
 }
 
 class _DesktopHome extends StatelessWidget {
-  const _DesktopHome({required this.controller});
+  const _DesktopHome({required this.controller, this.branchName});
 
   final HomeController controller;
+  final String? branchName;
 
   @override
   Widget build(BuildContext context) {
@@ -105,19 +140,30 @@ class _DesktopHome extends StatelessWidget {
             color: scheme.surface,
             child: SafeArea(
               bottom: false,
-              child: SizedBox(
-                height: 56,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
                     children: [
                       Icon(Icons.warehouse_outlined, color: scheme.primary, size: 28),
                       const SizedBox(width: 12),
-                      Text(
-                        'InOutWareApp',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'InOutWareApp',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                          if (branchName != null && branchName!.isNotEmpty)
+                            Text(
+                              'Filial: $branchName',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: scheme.onSurfaceVariant,
+                                  ),
                             ),
+                        ],
                       ),
                       const Spacer(),
                       IconButton(
@@ -133,7 +179,6 @@ class _DesktopHome extends StatelessWidget {
                 ),
               ),
             ),
-          ),
           Expanded(
             child: Align(
               alignment: Alignment.topCenter,
@@ -150,6 +195,16 @@ class _DesktopHome extends StatelessWidget {
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                       ),
+                      if (branchName != null && branchName!.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'Filial: $branchName',
+                          style: TextStyle(
+                            color: scheme.onSurfaceVariant,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 8),
                       Text(
                         'Selecione um módulo para continuar.',

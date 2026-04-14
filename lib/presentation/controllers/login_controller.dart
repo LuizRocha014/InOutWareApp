@@ -48,8 +48,9 @@ class LoginController extends GetxController {
         rememberCredentials: savePassword.value,
         username: user,
         password: pass,
+        user: result.user,
       );
-      Get.offAllNamed('/');
+      Get.offAllNamed('/', arguments: {'requireBranchPicker': true});
     } finally {
       isLoading.value = false;
     }

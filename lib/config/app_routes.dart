@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_out_ware_app/core/auth/app_auth.dart';
 import 'package:in_out_ware_app/core/auth/auth_middleware.dart';
 import 'package:in_out_ware_app/presentation/home_page.dart';
 import 'package:in_out_ware_app/presentation/pages/login_page.dart';
@@ -30,7 +31,7 @@ class AppRoutes {
     ),
     GetPage(
       name: '/sale',
-      page: () => const SaleHomePage(),
+      page: () => SaleHomePage(branchId: AppAuth.I.selectedBranchId),
       middlewares: [AuthMiddleware()],
     ),
     GetPage(

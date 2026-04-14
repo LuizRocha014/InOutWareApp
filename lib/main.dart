@@ -17,8 +17,8 @@ Future<void> main() async {
 
   await initContext();
 
-  initSaleAppInstances();
   initStockAppInstances();
+  initSaleAppInstances();
   initTransferAppInstances();
 
   await AppAuth.I.initialize();
