@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:in_out_ware_app/config/app_routes.dart';
 import 'package:in_out_ware_app/core/auth/app_auth.dart';
 import 'package:in_out_ware_app/core/infra/init.dart';
+import 'package:in_out_ware_app/presentation/theme/iw_design.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:window_size/window_size.dart';
 
@@ -63,10 +64,7 @@ class MyApp extends StatelessWidget {
       ],
       initialRoute: initialRoute,
       getPages: AppRoutes.routes,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0E2238)),
-        useMaterial3: true,
-      ),
+      theme: buildIwTheme(),
       builder: (context, widget) {
         AppMeasurements.setAppMeasurements(context);
         final child = ClampingScrollWrapper.builder(context, widget!);

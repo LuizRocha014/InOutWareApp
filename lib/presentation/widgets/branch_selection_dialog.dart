@@ -1,9 +1,10 @@
-import 'package:componentes_lr/componentes_lr.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:in_out_ware_app/core/auth/app_auth.dart';
+import 'package:in_out_ware_app/presentation/theme/iw_design.dart';
 import 'package:stock_module/modules/domain/repositories/stock_inventory_repository.dart';
 import 'package:stock_module/modules/domain/usecases/stock_inventory_usecases.dart';
+import 'package:componentes_lr/componentes_lr.dart' show instanceManager;
 
 /// Diálogo modal para escolher a filial de trabalho (após login ou se ainda não houver filial).
 Future<void> showBranchSelectionDialog(
@@ -91,67 +92,126 @@ class _BranchSelectionDialogState extends State<_BranchSelectionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return AlertDialog(
-      title: const Text('Filial de trabalho'),
-      content: SizedBox(
-        width: 400,
-        child: _loading
-            ? const Padding(
-                padding: EdgeInsets.all(24),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            : _error != null
-                ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Não foi possível carregar as filiais.',
-                        style: TextStyle(color: scheme.error),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _error!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 16),
-                      OutlinedButton(
-                        onPressed: _load,
-                        child: const Text('Tentar novamente'),
-                      ),
-                    ],
-                  )
-                : (_branches == null || _branches!.isEmpty)
-                    ? Text(
-                        'Nenhuma filial cadastrada na API.',
-                        style: TextStyle(color: scheme.onSurfaceVariant),
-                      )
-                    : InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Filial',
-                          border: OutlineInputBorder(),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            value: _selectedId,
-                            hint: const Text('Selecione'),
-                            items: _branches!
-                                .map(
-                                  (b) => DropdownMenuItem(
-                                    value: b.id,
-                                    child: Text(b.name),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (v) => setState(() => _selectedId = v),
-                          ),
-                        ),
-                      ),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(IwRadius.xl),
       ),
-      actions: [
+      backgroundColor: IwColors.surfaceContainerLow,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 440),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: IwColors.primaryContainer,
+                      borderRadius: BorderRadius.circular(IwRadius.md),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.store_outlined,
+                        color: IwColors.onPrimaryContainer, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Filial de trabalho',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: IwColors.onSurface,
+                        letterSpacing: -0.10,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Selecione a filial em que você quer operar.',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: IwColors.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _body(),
+              const SizedBox(height: 20),
+              _actions(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _body() {
+    if (_loading) {
+      return const SizedBox(
+        height: 80,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.cloud_off_outlined, color: IwColors.error, size: 20),
+              SizedBox(width: 8),
+              Text(
+                'Não foi possível carregar as filiais.',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: IwColors.error,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _error!,
+            style: const TextStyle(
+              fontSize: 12,
+              color: IwColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      );
+    }
+    final list = _branches;
+    if (list == null || list.isEmpty) {
+      return const Text(
+        'Nenhuma filial cadastrada na API.',
+        style: TextStyle(color: IwColors.onSurfaceVariant),
+      );
+    }
+    return DropdownButtonFormField<String>(
+      initialValue: _selectedId,
+      decoration: const InputDecoration(
+        labelText: 'Filial',
+        prefixIcon: Icon(Icons.store_outlined),
+      ),
+      hint: const Text('Selecione'),
+      items: list
+          .map((b) => DropdownMenuItem(value: b.id, child: Text(b.name)))
+          .toList(),
+      onChanged: (v) => setState(() => _selectedId = v),
+    );
+  }
+
+  Widget _actions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
         if (!_loading && (_error != null || (_branches?.isEmpty ?? false)))
           TextButton(
             onPressed: () async {
@@ -163,11 +223,22 @@ class _BranchSelectionDialogState extends State<_BranchSelectionDialog> {
             },
             child: const Text('Sair'),
           ),
-        if (!_loading && _error == null && (_branches?.isNotEmpty ?? false))
-          FilledButton(
-            onPressed: _selectedId == null ? null : _confirm,
-            child: const Text('Continuar'),
+        if (!_loading && _error != null) ...[
+          const SizedBox(width: 8),
+          OutlinedButton.icon(
+            onPressed: _load,
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('Tentar novamente'),
           ),
+        ],
+        if (!_loading && _error == null && (_branches?.isNotEmpty ?? false)) ...[
+          const SizedBox(width: 8),
+          FilledButton.icon(
+            onPressed: _selectedId == null ? null : _confirm,
+            icon: const Icon(Icons.arrow_forward, size: 18),
+            label: const Text('Continuar'),
+          ),
+        ],
       ],
     );
   }
